@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
+  m_Name: ModConfig
+  m_EditorClassIdentifier: 
+  id: burgerAlarm
+  title: Burger Alarm
+  description: 'The last thing you''d want in your Burger King burger is somebody''s
+    time bomb, but as it turns out, that might be what you get.
+
+
+    Original module by Marksam32. Concept by willycel123. Everything else by me.
+
+
+    Manuals:
+
+    HTML: ktane.timwi.de/HTML/Burger%20Alarm.html.
+
+    PDF: ktane.timwi.de/PDF/Burger%20Alarm.pdf.'
+  version: 
+  outputFolder: build
+  previewImage: {fileID: 2800000, guid: 769bd56f84e12a7458d16dfdaea78e32, type: 3}
