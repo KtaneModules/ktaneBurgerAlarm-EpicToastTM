@@ -52,6 +52,7 @@ public class burgerAlarmScript : MonoBehaviour {
     private int[] btnsToPress = { 1, 0, 0, 0, 0, 0, 1 };
     private int btnsPressed = 0;
     private bool sequenceCorrect = true;
+    private bool cooldown = false;
     private string[] reasonsForStrike = { "", "", "", "", "", "", "" };
     private Coroutine time;
 
@@ -75,7 +76,7 @@ public class burgerAlarmScript : MonoBehaviour {
     {
         order.OnInteract += delegate ()
         {
-            if (!solved)
+            if (!solved && !cooldown)
                 Order();
             order.AddInteractionPunch();
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, order.transform);
@@ -84,7 +85,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
         submit.OnInteract += delegate ()
         {
-            if (!solved)
+            if (!solved && !cooldown)
                 Submit();
             submit.AddInteractionPunch(10);
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, submit.transform);
@@ -97,7 +98,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
             btns[i].OnInteract += delegate ()
             {
-                if (!solved && finishedIncreasing && currentlyOrdering)
+                if (!solved && !cooldown)
                     BtnPress(j);
                 btns[j].AddInteractionPunch();
                 Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, btns[j].transform);
@@ -386,6 +387,7 @@ public class burgerAlarmScript : MonoBehaviour {
         {
             currentlyOrdering = true;
             finishedIncreasing = false;
+            cooldown = true;
 
             DebugMsg("You pressed order!");
 
@@ -668,6 +670,8 @@ public class burgerAlarmScript : MonoBehaviour {
 
         numberText.text = orderStrings[0];
 
+        cooldown = false;
+
         yield return new WaitForSeconds(.5f);
 
         while (time != 0 && currentlyOrdering)
@@ -737,6 +741,9 @@ public class burgerAlarmScript : MonoBehaviour {
     public string TwitchHelpMessage = "Use !{0} order to press the order button, and !{0} submit to press submit. You can do !{0} press mayo bun tomato cheese lettuce onions pickles mustard ketchup meat to press buttons.";
     IEnumerator ProcessTwitchCommand(string cmd)
     {
+        if (currentlyOrdering)
+            while (cooldown) { yield return new WaitForSeconds(0.1f); }
+
         if (cmd.ToLowerInvariant() == "order")
         {
             yield return null;
@@ -786,7 +793,7 @@ public class burgerAlarmScript : MonoBehaviour {
         if (!currentlyOrdering)
         {
             order.OnInteract();
-            while (!finishedIncreasing) { yield return new WaitForSeconds(0.1f); }
+            while (cooldown) { yield return new WaitForSeconds(0.1f); }
         }
         if (!sequenceCorrect)
         {
