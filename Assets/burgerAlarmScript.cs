@@ -793,7 +793,7 @@ public class burgerAlarmScript : MonoBehaviour {
     {
         if (!currentlyOrdering)
             order.OnInteract();
-        while (cooldown) { yield return true; }
+        while (cooldown) { yield return null; }
         if (!sequenceCorrect)
         {
             Module.HandlePass();
