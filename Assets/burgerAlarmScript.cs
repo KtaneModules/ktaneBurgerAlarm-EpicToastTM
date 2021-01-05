@@ -688,6 +688,7 @@ public class burgerAlarmScript : MonoBehaviour {
         {
             Module.HandleStrike();
             currentlyOrdering = false;
+            btnsPressed = 0;
             DebugMsg("Your customer got impatient and left. STRIKE!!!");
             StopAllCoroutines();
             StartCoroutine(StrikeAnimation());
@@ -742,7 +743,7 @@ public class burgerAlarmScript : MonoBehaviour {
     IEnumerator ProcessTwitchCommand(string cmd)
     {
         if (currentlyOrdering)
-            while (cooldown) { yield return new WaitForSeconds(0.1f); }
+            while (cooldown) { yield return null; }
 
         if (cmd.ToLowerInvariant() == "order")
         {
@@ -791,18 +792,19 @@ public class burgerAlarmScript : MonoBehaviour {
     IEnumerator TwitchHandleForcedSolve()
     {
         if (!currentlyOrdering)
-        {
             order.OnInteract();
-            while (cooldown) { yield return new WaitForSeconds(0.1f); }
-        }
+        while (cooldown) { yield return null; }
         if (!sequenceCorrect)
         {
-            btnsPressed = 0;
-            sequenceCorrect = true;
-            for (int i = 0; i < reasonsForStrike.Length; i++)
-            {
-                reasonsForStrike[i] = "";
-            }
+            Module.HandlePass();
+            solved = true;
+
+            numberText.text = "no.    15";
+            timerText.text = "GG";
+            StopCoroutine(time);
+            StartCoroutine(solveFade());
+
+            Audio.PlaySoundAtTransform("Solve", Module.transform);
         }
         int start = btnsPressed;
         for (int i = start; i < btnsToPress.Length; i++)
